@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import MapGL from 'react-map-gl';
+import MapGL, { FlyToInterpolator, Marker } from 'react-map-gl';
+import { easeCubic } from 'd3-ease';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PropTypes from 'prop-types';
 import { MAPBOX_TOKEN } from '../static/apiKeys';
@@ -13,22 +15,39 @@ const Map = ({ lat, long }) => {
     zoom: 8,
   });
 
-  const onViewportChange = viewPort => {
-    console.log('viewPort: ', viewPort);
-    if (viewPort.longitude > 0) {
-        viewPort.longitude = 0;
-    }
-    setViewport(viewPort);
+  const gotoCurrentPlace = () => {
+    console.log('viewPort: ', viewport);
+    const viewportCurrent = {
+      ...viewport,
+      longitude: long,
+      latitude: lat,
+      zoom: 8,
+      transitionDuration: 'auto',
+      transitionInterpolator: new FlyToInterpolator(),
+      transitionEasing: easeCubic,
+    };
+    setViewport(viewportCurrent);
   };
 
   return (
     <>
       <MapGL
         {...viewport}
-        onViewportChange={onViewportChange}
+        onViewportChange={setViewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
-      />
-      {/* <button onClick={getCurrentPlace}>Current place</button> */}
+      >
+        <Marker
+          latitude={lat}
+          longitude={long}
+          offsetLeft={-20}
+          offsetTop={-10}
+        >
+          <div>You are here</div>
+        </Marker>
+      </MapGL>
+      <button type="button" onClick={gotoCurrentPlace}>
+        Back to current place
+      </button>
     </>
   );
 };

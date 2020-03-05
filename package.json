@@ -10,6 +10,8 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/material-ui": "^0.21.7",
     "@typescript-eslint/parser": "^2.22.0",
+    "d3-ease": "^1.0.6",
+    "mapbox-gl": "^1.8.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
