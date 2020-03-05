@@ -27,13 +27,28 @@ const useStyles = makeStyles({
   },
 });
 
-const OtherUser = ({ lat, long, id }) => {
+const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
   const styles = useStyles();
   const [showPopup, setShowPopup] = useState(true);
-  
+
   return (
     <>
-      <Marker key={id} longitude={long} latitude={lat}>
+      <Marker
+        key={id}
+        longitude={long}
+        latitude={lat}
+        offsetLeft={-13}
+        offsetTop={5}
+      >
+        <div
+          className={styles.marker}
+          onClick={() => setShowPopup(true)}
+          onKeyDown={() => setShowPopup(true)}
+          role="button"
+          tabIndex={0}
+        >
+          <RoomIcon />
+        </div>
         {showPopup && (
           <Popup
             latitude={lat}
@@ -46,21 +61,27 @@ const OtherUser = ({ lat, long, id }) => {
           >
             <div>
               <h2>{id}</h2>
+              <p>{info}</p>
             </div>
           </Popup>
         )}
-        <RoomIcon />
       </Marker>
     </>
   );
 };
 
-export default OtherUser;
+export default MarkerAndPopup;
 
-// OtherUsersMarkers.defaultProps = {
-//   otherUsers: () => {},
-// };
+MarkerAndPopup.defaultProps = {
+  lat: 0,
+  long: 0,
+  id: 0,
+  info: '',
+};
 
-// OtherUsersMarkers.propTypes = {
-//   otherUsers: PropTypes.func,
-// };
+MarkerAndPopup.propTypes = {
+  lat: PropTypes.number,
+  long: PropTypes.number,
+  id: PropTypes.number,
+  info: PropTypes.string,
+};
