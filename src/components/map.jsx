@@ -17,7 +17,7 @@ const geolocateStyle = {
   margin: 10,
 };
 
-const Map = ({ lat, long }) => {
+const Map = ({ lat, long, mapTheme }) => {
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '400px',
@@ -48,7 +48,7 @@ const Map = ({ lat, long }) => {
         {...viewport}
         onViewportChange={setViewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
+        mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
       >
         <GeolocateControl
           style={geolocateStyle}
@@ -68,9 +68,11 @@ export default Map;
 Map.defaultProps = {
   lat: 0,
   long: 0,
+  mapTheme: 'light',
 };
 
 Map.propTypes = {
   lat: PropTypes.number,
   long: PropTypes.number,
+  mapTheme: PropTypes.string,
 };
