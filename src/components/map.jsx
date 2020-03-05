@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import MapGL, { FlyToInterpolator, Marker } from 'react-map-gl';
+import MapGL, {
+  FlyToInterpolator,
+  Marker,
+  GeolocateControl,
+} from 'react-map-gl';
 import { easeCubic } from 'd3-ease';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PropTypes from 'prop-types';
 import { MAPBOX_TOKEN } from '../static/apiKeys';
+
+const geolocateStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  margin: 10,
+};
 
 const Map = ({ lat, long }) => {
   const [viewport, setViewport] = useState({
@@ -13,6 +24,8 @@ const Map = ({ lat, long }) => {
     latitude: lat,
     longitude: long,
     zoom: 8,
+    bearing: 0, // азимут
+    pitch: 0,
   });
 
   const gotoCurrentPlace = () => {
@@ -35,15 +48,13 @@ const Map = ({ lat, long }) => {
         {...viewport}
         onViewportChange={setViewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
       >
-        <Marker
-          latitude={lat}
-          longitude={long}
-          offsetLeft={-20}
-          offsetTop={-10}
-        >
-          <div>You are here</div>
-        </Marker>
+        <GeolocateControl
+          style={geolocateStyle}
+          positionOptions={{ enableHighAccuracy: true }}
+          trackUserLocation
+        />
       </MapGL>
       <button type="button" onClick={gotoCurrentPlace}>
         Back to current place
