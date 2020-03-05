@@ -5,13 +5,15 @@ import MapGL, {
   Popup,
   GeolocateControl,
 } from 'react-map-gl';
-import { easeCubic } from 'd3-ease';
-import MyLocationIcon from '@material-ui/icons/MyLocation';
-import { makeStyles } from '@material-ui/core/styles';
-
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { easeCubic } from 'd3-ease';
+import RoomIcon from '@material-ui/icons/Room';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { MAPBOX_TOKEN } from '../static/apiKeys';
+
+import { MAPBOX_TOKEN } from '../static/api-keys';
+import otherUsersCoors from '../static/other-users';
+import OtherUsersMarkers from './other-users-markers';
 
 const geolocateStyle = {
   position: 'absolute',
@@ -24,15 +26,20 @@ const useStyles = makeStyles({
   marker: {
     cursor: 'pointer',
     outline: 'none',
+    '& svg': {
+      fill: '#ff5555',
+    },
   },
   popup: {
     maxWidth: '70%',
 
     '& h2': {
+      fontSize: 14,
       margin: '0 0 10px 0',
     },
 
     '& p': {
+      fontSize: 12,
       margin: 0,
     },
   },
@@ -46,7 +53,7 @@ const Map = ({ lat, long, mapTheme, place }) => {
     height: '400px',
     latitude: lat,
     longitude: long,
-    zoom: 8,
+    zoom: 13,
     bearing: 0, // азимут
     pitch: 0,
   });
@@ -57,7 +64,7 @@ const Map = ({ lat, long, mapTheme, place }) => {
       ...viewport,
       longitude: long,
       latitude: lat,
-      zoom: 8,
+      zoom: 13,
       transitionDuration: 'auto',
       transitionInterpolator: new FlyToInterpolator(),
       transitionEasing: easeCubic,
@@ -77,12 +84,14 @@ const Map = ({ lat, long, mapTheme, place }) => {
           <div
             className={styles.marker}
             onClick={() => setShowPopup(true)}
+            onKeyDown={() => setShowPopup(true)}
             role="button"
             tabIndex={0}
           >
-            <MyLocationIcon />
+            <RoomIcon />
           </div>
         </Marker>
+        <OtherUsersMarkers otherUsers={otherUsersCoors} />
         {showPopup && (
           <Popup
             latitude={lat}

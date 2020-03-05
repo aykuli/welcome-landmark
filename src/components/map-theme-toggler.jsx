@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+// TODO переделать button на select и сделать выбр карт побольше  streets light dark outdoors satellite
 const MapThemeToggler = ({ buttonText, toggleTheme }) => {
   return (
     <>

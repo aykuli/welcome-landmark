@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import useDataApi from '../hooks/useIpInfo';
-import { IPINFO_TOKEN } from '../static/apiKeys';
+import { IPINFO_TOKEN } from '../static/api-keys';
 import Map from './map';
 import MapThemeToggler from './map-theme-toggler';
 
