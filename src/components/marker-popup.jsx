@@ -6,14 +6,29 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   marker: {
+    transform: 'translate(0, 0)',
+    color: 'red',
+  },
+  currentUserMarker: {
+    position: 'relative',
     cursor: 'pointer',
     outline: 'none',
     '& svg': {
       fill: '#ff5555',
     },
   },
+  otherUserMarker: {
+    position: 'relative',
+    cursor: 'pointer',
+    outline: 'none',
+    '& svg': {
+      fill: '#5555ff',
+    },
+  },
+
   popup: {
     maxWidth: '70%',
+    transform: 'none',
 
     '& h2': {
       fontSize: 14,
@@ -41,7 +56,9 @@ const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
         offsetTop={5}
       >
         <div
-          className={styles.marker}
+          className={
+            isCurrent ? styles.currentUserMarker : styles.otherUserMarker
+          }
           onClick={() => setShowPopup(true)}
           onKeyDown={() => setShowPopup(true)}
           role="button"
@@ -49,23 +66,25 @@ const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
         >
           <RoomIcon />
         </div>
-        {showPopup && (
-          <Popup
-            latitude={lat}
-            longitude={long}
-            onClose={() => setShowPopup(false)}
-            closeOnClick={false}
-            closeButton
-            anchor="right"
-            className={styles.popup}
-          >
-            <div>
-              <h2>{id}</h2>
-              <p>{info}</p>
-            </div>
-          </Popup>
-        )}
       </Marker>
+      {showPopup && (
+        <Popup
+          offsetLeft={0}
+          offsetTop={0}
+          latitude={lat}
+          longitude={long}
+          onClose={() => setShowPopup(false)}
+          closeOnClick={false}
+          closeButton
+          anchor="right"
+          className={styles.popup}
+        >
+          <div>
+            <h2>{id}</h2>
+            <p>{info}</p>
+          </div>
+        </Popup>
+      )}
     </>
   );
 };
@@ -77,6 +96,7 @@ MarkerAndPopup.defaultProps = {
   long: 0,
   id: 0,
   info: '',
+  isCurrent: false,
 };
 
 MarkerAndPopup.propTypes = {
@@ -84,4 +104,5 @@ MarkerAndPopup.propTypes = {
   long: PropTypes.number,
   id: PropTypes.number,
   info: PropTypes.string,
+  isCurrent: PropTypes.bool,
 };

@@ -42,6 +42,7 @@ const Map = ({ lat, long, mapTheme }) => {
 
   const otherUsers = otherUsersCoors(lat, long);
   console.log(lat, long);
+  console.log(viewport.width);
   return (
     <>
       <MapGL
@@ -50,10 +51,15 @@ const Map = ({ lat, long, mapTheme }) => {
         mapboxApiAccessToken={MAPBOX_TOKEN}
         mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
       >
-        <MarkerAndPopup lat={lat} long={long} id={0} info="Current User" />
+        <MarkerAndPopup
+          lat={lat}
+          long={long}
+          id={0}
+          info="Current User"
+          isCurrent
+        />
         {otherUsers.map(userData => {
           const { id, latitude, longitude, info } = userData;
-          console.log(userData);
           return (
             <MarkerAndPopup
               key={id}
@@ -61,6 +67,7 @@ const Map = ({ lat, long, mapTheme }) => {
               long={longitude}
               id={id}
               info={info}
+              isCurrent={false}
             />
           );
         })}
