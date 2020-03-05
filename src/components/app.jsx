@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 
 import useDataApi  from '../hooks/useIpInfo.js';
-import { ipInfoKey } from '../static/apiKeys';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { IPINFO_TOKEN } from '../static/apiKeys';
+import Map from './map'
 
 const App = () => {
     const [isDataReady, setIsDataReady] = useState(false);
     const [coors, setCoors] = useState(null);
     const [place,setPlace] = useState({ city: '', country: '' });
-    const { data, isLoading, isError } = useDataApi(`https://ipinfo.io?token=${ipInfoKey}`, null);
+    const { data, isLoading, isError } = useDataApi(`https://ipinfo.io?token=${IPINFO_TOKEN}`, null);
 
     useEffect(() => {
         if (data !== null) {
@@ -27,8 +26,9 @@ const App = () => {
         {isDataReady ? <>
                 <h5>{place.city}, {place.country}</h5>
                 <p>lat = {coors[0]}, long = {coors[1]}</p>
+                <Map lat={Number(coors[0])} long={Number(coors[1])}/>
                 </>
-        : null}
+        : null}        
         </>
     );
 }
