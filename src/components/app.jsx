@@ -56,6 +56,7 @@ const App = () => {
             lat={Number(coors[0])}
             long={Number(coors[1])}
             mapTheme={mapTheme}
+            place={place}
           />
         </>
       ) : null}
