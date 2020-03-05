@@ -91,7 +91,7 @@ const Map = ({ lat, long, mapTheme, place }) => {
             <RoomIcon />
           </div>
         </Marker>
-        <OtherUsersMarkers otherUsers={otherUsersCoors} />
+        <OtherUsersMarkers otherUsers={otherUsersCoors(lat, long)} />
         {showPopup && (
           <Popup
             latitude={lat}

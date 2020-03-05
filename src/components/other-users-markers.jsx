@@ -1,10 +1,5 @@
-import React from 'react';
-import MapGL, {
-  FlyToInterpolator,
-  Marker,
-  Popup,
-  GeolocateControl,
-} from 'react-map-gl';
+import React, { useState } from 'react';
+import { Marker, Popup } from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -32,34 +27,45 @@ const useStyles = makeStyles({
   },
 });
 
-const OtherUsersMarkers = otherUsers => {
+const OtherUsersMarkers = ({ otherUsers }) => {
   const styles = useStyles();
-  console.log(otherUsers);
+  const [showPopup, setShowPopup] = useState(true);
   return (
     <>
-      {/* <Marker
-        key={city.name}
-        longitude={city.longitude}
-        latitude={city.latitude}
-      > */}
-        <RoomIcon />
-      {/* </Marker> */}
-      )
+      {otherUsers.map(coors => {
+        const { id, latitude, longitude } = coors;
+        console.log(coors);
+        return (
+          <Marker key={id} longitude={latitude} latitude={longitude}>
+            <RoomIcon />
+            {showPopup && (
+              <Popup
+                latitude={latitude}
+                longitude={longitude}
+                onClose={() => setShowPopup(false)}
+                closeOnClick={false}
+                closeButton
+                anchor="bottom"
+                className={styles.popup}
+              >
+                <div>
+                  <h2>{id}</h2>
+                </div>
+              </Popup>
+            )}
+          </Marker>
+        );
+      })}
     </>
   );
 };
 
 export default OtherUsersMarkers;
 
-OtherUsersMarkers.defaultProps = {
-  otherUsers: [],
-};
+// OtherUsersMarkers.defaultProps = {
+//   otherUsers: () => {},
+// };
 
-OtherUsersMarkers.propTypes = {
-  otherUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      latitude: PropTypes.number,
-      longitude: PropTypes.number,
-    })
-  ),
-};
+// OtherUsersMarkers.propTypes = {
+//   otherUsers: PropTypes.func,
+// };
