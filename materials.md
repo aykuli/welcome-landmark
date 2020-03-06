@@ -5,3 +5,4 @@ Materials used to build this app:
 3. [d3-ease](https://bl.ocks.org/d3noob/1ea51d03775b9650e8dfd03474e202fe)
 4. [Markers](https://docs.mapbox.com/mapbox-gl-js/api/#marker)
 5. [Examples](https://github.com/uber/react-map-gl/blob/5.2-release/examples/locate-user/src/app.js)
+6. [Session Storage and Local Storage in React](https://www.robinwieruch.de/local-storage-react)

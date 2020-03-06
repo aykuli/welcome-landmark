@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import MapGL, { FlyToInterpolator, GeolocateControl } from 'react-map-gl';
+import MapGL, {
+  FlyToInterpolator,
+  GeolocateControl,
+  ScaleControl,
+  FullscreenControl,
+} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { easeCubic } from 'd3-ease';
 import { Button, ButtonGroup } from '@material-ui/core';
@@ -70,6 +75,9 @@ const Map = ({ lat, long }) => {
         mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
         attributionControl
       >
+        <div style={{ position: 'absolute', right: 0 }}>
+          <FullscreenControl container={document.querySelector('body')} />
+        </div>
         <MarkerAndPopup
           lat={lat}
           long={long}
@@ -99,6 +107,9 @@ const Map = ({ lat, long }) => {
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation
         />
+        <div style={{ position: 'absolute', bottom: 10, right: 35 }}>
+          <ScaleControl maxWidth={100} unit="metric" />
+        </div>
       </MapGL>
       <ButtonGroup color="primary" aria-label="button group" size="small">
         <Button onClick={gotoCurrentPlace} aria-label="Back to current place">

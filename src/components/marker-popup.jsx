@@ -95,6 +95,7 @@ const MarkerAndPopup = ({
           closeOnClick={false}
           closeButton
           anchor="left"
+          dynamicPosition
           className={styles.popup}
         >
           <div>
