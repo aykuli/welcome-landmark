@@ -5,8 +5,13 @@ import { easeCubic } from 'd3-ease';
 import PropTypes from 'prop-types';
 
 import { MAPBOX_TOKEN } from '../static/api-keys';
-import otherUsersCoors from '../static/other-users';
+import otherUsersCoors from '../static/mock/other-users';
 import MarkerAndPopup from './marker-popup';
+import colorGenerator from '../utils/color-generator';
+import theme from '../static/themes/theme';
+
+const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
+console.log(colors);
 
 const Map = ({ lat, long, mapTheme }) => {
   const [viewport, setViewport] = useState({
@@ -59,8 +64,9 @@ const Map = ({ lat, long, mapTheme }) => {
           id={0}
           info="Current User"
           isCurrent
+          color={theme.palette.primary.main}
         />
-        {otherUsers.map(userData => {
+        {otherUsers.map((userData, i) => {
           const { id, latitude, longitude, info } = userData;
           return (
             <MarkerAndPopup
@@ -71,6 +77,7 @@ const Map = ({ lat, long, mapTheme }) => {
               info={info}
               isCurrent={false}
               isShowOthers={isShowOthers}
+              color={colors[i]}
             />
           );
         })}

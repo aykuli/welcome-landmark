@@ -7,11 +7,10 @@ const UbuntuMono = {
   fontWeight: '400',
 };
 
-// palette taken from https://docs.mapbox.com
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#4264FB',
+      main: '#E8676B',
       contrastText: '#FFFFFF',
     },
     secondary: {

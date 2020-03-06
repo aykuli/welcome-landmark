@@ -4,57 +4,62 @@ import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
-// const slightlyOtherColor = () => {
+import theme from '../static/themes/theme';
 
-// }
-
-const useStyles = makeStyles({
-  marker: {
-    transform: 'translate(0, 0)',
-    color: 'red',
-  },
-  currentUserMarker: {
-    position: 'relative',
-    cursor: 'pointer',
-    outline: 'none',
-    '& svg': {
-      fill: '#ff5555',
-    },
-  },
-  otherUserMarker: {
-    position: 'relative',
-    cursor: 'pointer',
-    outline: 'none',
-    '& svg': {
-      fill: '#5555ff',
-    },
-  },
-
-  popup: {
-    maxWidth: '70%',
-    transform: 'none',
-
-    '& h2': {
-      fontSize: 14,
-      margin: '0 0 10px 0',
-    },
-
-    '& p': {
-      fontSize: 12,
-      margin: 0,
-    },
-  },
-});
-
-const MarkerAndPopup = ({ lat, long, id, info, isCurrent, isShowOthers }) => {
-  const styles = useStyles();
+const MarkerAndPopup = ({
+  lat,
+  long,
+  id,
+  info,
+  isCurrent,
+  isShowOthers,
+  color,
+}) => {
   const [isShowPopup, setIsShowPopup] = useState(false);
 
   useEffect(() => {
     if (isCurrent) {
       setIsShowPopup(true);
     }
+  }, [isCurrent]);
+
+  const useStyles = makeStyles({
+    marker: {
+      transform: 'translate(0, 0)',
+      color: 'red',
+    },
+    currentUserMarker: {
+      position: 'relative',
+      cursor: 'pointer',
+      outline: 'none',
+      '& svg': {
+        fill: theme.palette.primary.main,
+      },
+    },
+    otherUserMarker: {
+      position: 'relative',
+      cursor: 'pointer',
+      outline: 'none',
+      '& svg': {
+        fill: color,
+      },
+    },
+    popup: {
+      maxWidth: '70%',
+      transform: 'none',
+
+      '& h2': {
+        fontSize: 14,
+        margin: '0 0 10px 0',
+      },
+      '& p': {
+        fontSize: 12,
+        margin: 0,
+      },
+    },
   });
+
+  const styles = useStyles();
 
   return isCurrent || isShowOthers ? (
     <>
@@ -108,6 +113,7 @@ MarkerAndPopup.defaultProps = {
   info: '',
   isCurrent: false,
   isShowOthers: true,
+  color: theme.palette.primary.main,
 };
 
 MarkerAndPopup.propTypes = {
@@ -117,4 +123,5 @@ MarkerAndPopup.propTypes = {
   info: PropTypes.string,
   isCurrent: PropTypes.bool,
   isShowOthers: PropTypes.bool,
+  color: PropTypes.string,
 };
