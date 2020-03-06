@@ -4,6 +4,10 @@ import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+// const slightlyOtherColor = () => {
+
+// }
+
 const useStyles = makeStyles({
   marker: {
     transform: 'translate(0, 0)',

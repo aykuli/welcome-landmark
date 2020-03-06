@@ -4,7 +4,7 @@ import useDataApi from '../hooks/useIpInfo';
 import { IPINFO_TOKEN } from '../static/api-keys';
 import Map from './map';
 import MapThemeToggler from './map-theme-toggler';
-import ErrorBoundry from './error-boundry';
+import ErrorBoundry from './error-boundary';
 
 const App = () => {
   const [isDataReady, setIsDataReady] = useState(false);
