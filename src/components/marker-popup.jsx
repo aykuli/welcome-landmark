@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 import theme from '../static/themes/theme';
@@ -49,12 +50,13 @@ const MarkerAndPopup = ({
       transform: 'none',
 
       '& h2': {
-        fontSize: 14,
         margin: '0 0 10px 0',
       },
       '& p': {
-        fontSize: 12,
         margin: 0,
+      },
+      '& .mapboxgl-popup-content': {
+        minWidth: 50,
       },
     },
   });
@@ -95,8 +97,8 @@ const MarkerAndPopup = ({
           className={styles.popup}
         >
           <div>
-            <h2>{id}</h2>
-            <p>{info}</p>
+            <Typography variant="h5">{id}</Typography>
+            <Typography variant="body1">{info}</Typography>
           </div>
         </Popup>
       )}

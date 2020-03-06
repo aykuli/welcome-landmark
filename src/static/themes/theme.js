@@ -10,7 +10,7 @@ const UbuntuMono = {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#E8676B',
+      main: '#F44336',
       contrastText: '#FFFFFF',
     },
     secondary: {
@@ -26,7 +26,7 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: UbuntuMono,
+    fontFamily: '"Ubuntu Mono", monospace',
     fontSize: 16,
     h1: {
       fontSize: '3.5rem',

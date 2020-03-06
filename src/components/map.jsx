@@ -11,7 +11,6 @@ import colorGenerator from '../utils/color-generator';
 import theme from '../static/themes/theme';
 
 const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
-console.log(colors);
 
 const Map = ({ lat, long, mapTheme }) => {
   const [viewport, setViewport] = useState({
@@ -20,7 +19,7 @@ const Map = ({ lat, long, mapTheme }) => {
     latitude: lat,
     longitude: long,
     zoom: 10,
-    bearing: 0, // азимут
+    bearing: 0,
     pitch: 0,
   });
   const [isShowOthers, setIsShowOthers] = useState(true);

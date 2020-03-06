@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
+
+import theme from '../static/themes/theme';
 
 import useDataApi from '../hooks/useIpInfo';
 import { IPINFO_TOKEN } from '../static/api-keys';
@@ -33,34 +36,36 @@ const App = () => {
 
   return (
     <ErrorBoundry>
-      {isError && <div>Something went wrong...</div>}
-      {isLoading ? <div>Loading current coordinates...</div> : null}
-      {isDataReady ? (
-        <>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <h5>
-                {place.city},{place.country}
-              </h5>
-              <p>
-                lat ={coors[0]}, long ={coors[1]}
-              </p>
+      <ThemeProvider theme={theme}>
+        {isError && <div>Something went wrong...</div>}
+        {isLoading ? <div>Loading current coordinates...</div> : null}
+        {isDataReady ? (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <h5>
+                  {place.city},{place.country}
+                </h5>
+                <p>
+                  lat ={coors[0]}, long ={coors[1]}
+                </p>
+              </div>
+              <div>
+                <MapThemeToggler
+                  buttonText={buttonText}
+                  toggleTheme={toggleTheme}
+                />
+              </div>
             </div>
-            <div>
-              <MapThemeToggler
-                buttonText={buttonText}
-                toggleTheme={toggleTheme}
-              />
-            </div>
-          </div>
-          <Map
-            lat={Number(coors[0])}
-            long={Number(coors[1])}
-            mapTheme={mapTheme}
-            place={place}
-          />
-        </>
-      ) : null}
+            <Map
+              lat={Number(coors[0])}
+              long={Number(coors[1])}
+              mapTheme={mapTheme}
+              place={place}
+            />
+          </>
+        ) : null}
+      </ThemeProvider>
     </ErrorBoundry>
   );
 };
