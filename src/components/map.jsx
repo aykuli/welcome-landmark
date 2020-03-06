@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MapGL, {
   FlyToInterpolator,
@@ -16,6 +16,7 @@ import colorGenerator from '../utils/color-generator';
 import theme from '../static/themes/theme';
 import { MAPBOX_TOKEN } from '../static/api-keys';
 import otherUsersCoors from '../static/mock/other-users';
+import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
 
 const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
 
@@ -33,8 +34,6 @@ const Map = ({ lat, long }) => {
   const [mapTheme, setMapTheme] = useState('streets-v11');
 
   const handleTheme = e => {
-    console.log('---------------');
-    console.log(e.target);
     setMapTheme(e.target.value);
   };
 
@@ -61,7 +60,16 @@ const Map = ({ lat, long }) => {
   const toggleOthers = () => {
     setIsShowOthers(!isShowOthers);
   };
+
   const otherUsers = otherUsersCoors(lat, long);
+
+  useEffect(() => {
+    localStorage.setItem(WELCOME_LANDMARK_LS_HISTORY, '');
+  }, []);
+
+  const handleSave = (e) => {
+    console.log('saving');
+  };
 
   return (
     <>
@@ -85,6 +93,7 @@ const Map = ({ lat, long }) => {
           info="Current User"
           isCurrent
           color={theme.palette.primary.main}
+          handleSave={handleSave}
         />
         {otherUsers.map((userData, i) => {
           const { id, latitude, longitude, info } = userData;
@@ -98,6 +107,7 @@ const Map = ({ lat, long }) => {
               isCurrent={false}
               isShowOthers={isShowOthers}
               color={colors[i]}
+              handleSave={handleSave}
             />
           );
         })}
