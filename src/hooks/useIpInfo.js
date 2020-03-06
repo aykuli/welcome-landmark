@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
 const useDataApi = (initUrl, initData) => {
   const [data, setData] = useState(initData);
   const [url, setUrl] = useState(initUrl);

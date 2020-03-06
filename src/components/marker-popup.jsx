@@ -1,37 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const useStyles = makeStyles({
-  marker: {
-    cursor: 'pointer',
-    outline: 'none',
-    '& svg': {
-      fill: '#ff5555',
-    },
-  },
-  popup: {
-    maxWidth: '70%',
+import theme from '../static/themes/theme';
 
-    '& h2': {
-      fontSize: 14,
-      margin: '0 0 10px 0',
-    },
+const MarkerAndPopup = ({
+  lat,
+  long,
+  id,
+  info,
+  isCurrent,
+  isShowOthers,
+  color,
+}) => {
+  const [isShowPopup, setIsShowPopup] = useState(false);
 
-    '& p': {
-      fontSize: 12,
-      margin: 0,
-    },
-  },
-});
+  useEffect(() => {
+    if (isCurrent) {
+      setIsShowPopup(true);
+    }
+  }, [isCurrent]);
 
-const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
+  const useStyles = makeStyles({
+    marker: {
+      transform: 'translate(0, 0)',
+      color: 'red',
+    },
+    currentUserMarker: {
+      position: 'relative',
+      cursor: 'pointer',
+      outline: 'none',
+      '& svg': {
+        fill: theme.palette.error.main,
+      },
+    },
+    otherUserMarker: {
+      position: 'relative',
+      cursor: 'pointer',
+      outline: 'none',
+      '& svg': {
+        fill: color,
+      },
+    },
+    popup: {
+      maxWidth: '70%',
+      transform: 'none',
+
+      '& h2': {
+        margin: '0 0 10px 0',
+      },
+      '& p': {
+        margin: 0,
+      },
+      '& .mapboxgl-popup-content': {
+        minWidth: 50,
+        boxShadow: '2px 2px 10px rgba(0, 0, 0, .53)',
+      },
+    },
+  });
+
   const styles = useStyles();
-  const [showPopup, setShowPopup] = useState(true);
 
-  return (
+  return isCurrent || isShowOthers ? (
     <>
       <Marker
         key={id}
@@ -41,33 +74,38 @@ const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
         offsetTop={5}
       >
         <div
-          className={styles.marker}
-          onClick={() => setShowPopup(true)}
-          onKeyDown={() => setShowPopup(true)}
+          className={
+            isCurrent ? styles.currentUserMarker : styles.otherUserMarker
+          }
+          onClick={() => setIsShowPopup(!isShowPopup)}
+          onKeyDown={() => setIsShowPopup(true)}
           role="button"
           tabIndex={0}
         >
           <RoomIcon />
         </div>
-        {showPopup && (
-          <Popup
-            latitude={lat}
-            longitude={long}
-            onClose={() => setShowPopup(false)}
-            closeOnClick={false}
-            closeButton
-            anchor="right"
-            className={styles.popup}
-          >
-            <div>
-              <h2>{id}</h2>
-              <p>{info}</p>
-            </div>
-          </Popup>
-        )}
       </Marker>
+      {isShowPopup && (
+        <Popup
+          offsetLeft={0}
+          offsetTop={27}
+          latitude={lat}
+          longitude={long}
+          onClose={() => setIsShowPopup(false)}
+          closeOnClick={false}
+          closeButton
+          anchor="left"
+          dynamicPosition
+          className={styles.popup}
+        >
+          <div>
+            <Typography variant="h5">{id}</Typography>
+            <Typography variant="body1">{info}</Typography>
+          </div>
+        </Popup>
+      )}
     </>
-  );
+  ) : null;
 };
 
 export default MarkerAndPopup;
@@ -77,6 +115,9 @@ MarkerAndPopup.defaultProps = {
   long: 0,
   id: 0,
   info: '',
+  isCurrent: false,
+  isShowOthers: true,
+  color: theme.palette.primary.main,
 };
 
 MarkerAndPopup.propTypes = {
@@ -84,4 +125,7 @@ MarkerAndPopup.propTypes = {
   long: PropTypes.number,
   id: PropTypes.number,
   info: PropTypes.string,
+  isCurrent: PropTypes.bool,
+  isShowOthers: PropTypes.bool,
+  color: PropTypes.string,
 };
