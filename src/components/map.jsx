@@ -67,8 +67,12 @@ const Map = ({ lat, long }) => {
     localStorage.setItem(WELCOME_LANDMARK_LS_HISTORY, '');
   }, []);
 
-  const handleSave = (e) => {
-    console.log('saving');
+  const handleSave = e => {
+    console.log('saving: ', e);
+  };
+
+  const showHistory = () => {
+    console.log('show history');
   };
 
   return (
@@ -117,7 +121,7 @@ const Map = ({ lat, long }) => {
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation
         />
-        <div style={{ position: 'absolute', bottom: 10, right: 35 }}>
+        <div style={{ position: 'absolute', bottom: 20, right: 35 }}>
           <ScaleControl maxWidth={100} unit="metric" />
         </div>
       </MapGL>
@@ -127,6 +131,9 @@ const Map = ({ lat, long }) => {
         </Button>
         <Button onClick={toggleOthers} aria-label="Hide or show other user's">
           {isShowOthers ? 'Hide ' : 'Show '}other user&apos;s
+        </Button>
+        <Button onClick={showHistory} aria-label="Show history">
+          Show history
         </Button>
       </ButtonGroup>
     </>
