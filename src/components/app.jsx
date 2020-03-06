@@ -4,6 +4,7 @@ import useDataApi from '../hooks/useIpInfo';
 import { IPINFO_TOKEN } from '../static/api-keys';
 import Map from './map';
 import MapThemeToggler from './map-theme-toggler';
+import ErrorBoundry from './error-boundry';
 
 const App = () => {
   const [isDataReady, setIsDataReady] = useState(false);
@@ -31,7 +32,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <ErrorBoundry>
       {isError && <div>Something went wrong...</div>}
       {isLoading ? <div>Loading current coordinates...</div> : null}
       {isDataReady ? (
@@ -60,7 +61,7 @@ const App = () => {
           />
         </>
       ) : null}
-    </>
+    </ErrorBoundry>
   );
 };
 

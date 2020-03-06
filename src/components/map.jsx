@@ -8,31 +8,24 @@ import { MAPBOX_TOKEN } from '../static/api-keys';
 import otherUsersCoors from '../static/other-users';
 import MarkerAndPopup from './marker-popup';
 
-const geolocateStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  margin: 10,
-};
-
 const Map = ({ lat, long, mapTheme }) => {
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '400px',
     latitude: lat,
     longitude: long,
-    zoom: 8,
+    zoom: 10,
     bearing: 0, // азимут
     pitch: 0,
   });
+  const [isShowOthers, setIsShowOthers] = useState(true);
 
   const gotoCurrentPlace = () => {
-    console.log('viewPort: ', viewport);
     const viewportCurrent = {
       ...viewport,
       longitude: long,
       latitude: lat,
-      zoom: 8,
+      zoom: 13,
       transitionDuration: 'auto',
       transitionInterpolator: new FlyToInterpolator(),
       transitionEasing: easeCubic,
@@ -40,9 +33,18 @@ const Map = ({ lat, long, mapTheme }) => {
     setViewport(viewportCurrent);
   };
 
+  const geolocateStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    margin: 10,
+  };
+
+  const toggleOthers = () => {
+    setIsShowOthers(!isShowOthers);
+  };
   const otherUsers = otherUsersCoors(lat, long);
-  console.log(lat, long);
-  console.log(viewport.width);
+
   return (
     <>
       <MapGL
@@ -68,6 +70,7 @@ const Map = ({ lat, long, mapTheme }) => {
               id={id}
               info={info}
               isCurrent={false}
+              isShowOthers={isShowOthers}
             />
           );
         })}
@@ -78,9 +81,14 @@ const Map = ({ lat, long, mapTheme }) => {
           trackUserLocation
         />
       </MapGL>
-      <button type="button" onClick={gotoCurrentPlace}>
-        Back to current place
-      </button>
+      <div>
+        <button type="button" onClick={gotoCurrentPlace}>
+          Back to current place
+        </button>
+        <button type="button" onClick={toggleOthers}>
+          {isShowOthers ? 'Hide ' : 'Show '}other user&apos;s
+        </button>
+      </div>
     </>
   );
 };

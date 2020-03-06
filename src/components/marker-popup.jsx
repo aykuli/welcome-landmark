@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
@@ -42,11 +42,17 @@ const useStyles = makeStyles({
   },
 });
 
-const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
+const MarkerAndPopup = ({ lat, long, id, info, isCurrent, isShowOthers }) => {
   const styles = useStyles();
-  const [showPopup, setShowPopup] = useState(true);
+  const [isShowPopup, setIsShowPopup] = useState(false);
 
-  return (
+  useEffect(() => {
+    if (isCurrent) {
+      setIsShowPopup(true);
+    }
+  });
+
+  return isCurrent || isShowOthers ? (
     <>
       <Marker
         key={id}
@@ -59,24 +65,24 @@ const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
           className={
             isCurrent ? styles.currentUserMarker : styles.otherUserMarker
           }
-          onClick={() => setShowPopup(true)}
-          onKeyDown={() => setShowPopup(true)}
+          onClick={() => setIsShowPopup(!isShowPopup)}
+          onKeyDown={() => setIsShowPopup(true)}
           role="button"
           tabIndex={0}
         >
           <RoomIcon />
         </div>
       </Marker>
-      {showPopup && (
+      {isShowPopup && (
         <Popup
           offsetLeft={0}
-          offsetTop={0}
+          offsetTop={27}
           latitude={lat}
           longitude={long}
-          onClose={() => setShowPopup(false)}
+          onClose={() => setIsShowPopup(false)}
           closeOnClick={false}
           closeButton
-          anchor="right"
+          anchor="left"
           className={styles.popup}
         >
           <div>
@@ -86,7 +92,7 @@ const MarkerAndPopup = ({ lat, long, id, info, isCurrent }) => {
         </Popup>
       )}
     </>
-  );
+  ) : null;
 };
 
 export default MarkerAndPopup;
@@ -97,6 +103,7 @@ MarkerAndPopup.defaultProps = {
   id: 0,
   info: '',
   isCurrent: false,
+  isShowOthers: true,
 };
 
 MarkerAndPopup.propTypes = {
@@ -105,4 +112,5 @@ MarkerAndPopup.propTypes = {
   id: PropTypes.number,
   info: PropTypes.string,
   isCurrent: PropTypes.bool,
+  isShowOthers: PropTypes.bool,
 };
