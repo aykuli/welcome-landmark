@@ -10,7 +10,7 @@ const UbuntuMono = {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#F44336',
+      main: '#314CCD',
       contrastText: '#FFFFFF',
     },
     secondary: {

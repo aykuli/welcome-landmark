@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import MapGL, { FlyToInterpolator, GeolocateControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { easeCubic } from 'd3-ease';
-import PropTypes from 'prop-types';
+import { Button, ButtonGroup } from '@material-ui/core';
 
-import { MAPBOX_TOKEN } from '../static/api-keys';
-import otherUsersCoors from '../static/mock/other-users';
 import MarkerAndPopup from './marker-popup';
+import MapThemeToggler from './map-theme-toggler';
 import colorGenerator from '../utils/color-generator';
 import theme from '../static/themes/theme';
+import { MAPBOX_TOKEN } from '../static/api-keys';
+import otherUsersCoors from '../static/mock/other-users';
 
 const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
 
-const Map = ({ lat, long, mapTheme }) => {
+const Map = ({ lat, long }) => {
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '400px',
@@ -23,6 +25,13 @@ const Map = ({ lat, long, mapTheme }) => {
     pitch: 0,
   });
   const [isShowOthers, setIsShowOthers] = useState(true);
+  const [mapTheme, setMapTheme] = useState('streets-v11');
+
+  const handleTheme = e => {
+    console.log('---------------');
+    console.log(e.target);
+    setMapTheme(e.target.value);
+  };
 
   const gotoCurrentPlace = () => {
     const viewportCurrent = {
@@ -51,11 +60,15 @@ const Map = ({ lat, long, mapTheme }) => {
 
   return (
     <>
+      <div style={{ textAlign: 'right' }}>
+        <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />
+      </div>
       <MapGL
         {...viewport}
         onViewportChange={setViewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
         mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
+        attributionControl
       >
         <MarkerAndPopup
           lat={lat}
@@ -87,14 +100,14 @@ const Map = ({ lat, long, mapTheme }) => {
           trackUserLocation
         />
       </MapGL>
-      <div>
-        <button type="button" onClick={gotoCurrentPlace}>
+      <ButtonGroup color="primary" aria-label="button group" size="small">
+        <Button onClick={gotoCurrentPlace} aria-label="Back to current place">
           Back to current place
-        </button>
-        <button type="button" onClick={toggleOthers}>
+        </Button>
+        <Button onClick={toggleOthers} aria-label="Hide or show other user's">
           {isShowOthers ? 'Hide ' : 'Show '}other user&apos;s
-        </button>
-      </div>
+        </Button>
+      </ButtonGroup>
     </>
   );
 };
@@ -104,14 +117,12 @@ export default Map;
 Map.defaultProps = {
   lat: 0,
   long: 0,
-  mapTheme: 'light',
   place: { city: '', country: '' },
 };
 
 Map.propTypes = {
   lat: PropTypes.number,
   long: PropTypes.number,
-  mapTheme: PropTypes.string,
   place: PropTypes.shape({
     city: PropTypes.string,
     country: PropTypes.string,

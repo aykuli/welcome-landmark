@@ -34,7 +34,7 @@ const MarkerAndPopup = ({
       cursor: 'pointer',
       outline: 'none',
       '& svg': {
-        fill: theme.palette.primary.main,
+        fill: theme.palette.error.main,
       },
     },
     otherUserMarker: {
@@ -57,6 +57,7 @@ const MarkerAndPopup = ({
       },
       '& .mapboxgl-popup-content': {
         minWidth: 50,
+        boxShadow: '2px 2px 10px rgba(0, 0, 0, .53)',
       },
     },
   });
