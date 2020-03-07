@@ -38,7 +38,6 @@ const App = () => {
       const { city, country, loc } = data;
       setCoors(loc.split(','));
       setPlace({ city, country });
-      console.log('data: ', data);
     }
   }, [data]);
 

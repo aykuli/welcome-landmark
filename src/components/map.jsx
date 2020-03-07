@@ -24,6 +24,9 @@ import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
 const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
 
 const useStyles = makeStyles({
+  mapContainer: {
+    width: '100%',
+  },
   mapControllers: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -33,6 +36,8 @@ const useStyles = makeStyles({
   fullscreenControl: {
     position: 'absolute',
     right: 0,
+    // width: '100vw',
+    // height: '100vh',
   },
   scaler: { position: 'absolute', bottom: 20, right: 35 },
   modalWrap: {
@@ -45,7 +50,7 @@ const Map = ({ lat, long, place }) => {
   const styles = useStyles();
   const [viewport, setViewport] = useState({
     width: '100%',
-    height: '400px',
+    height: '100vh',
     latitude: lat,
     longitude: long,
     zoom: 10,
@@ -105,29 +110,19 @@ const Map = ({ lat, long, place }) => {
     };
     let newHistory = [];
     if (historyJSON !== null) {
-      console.log(
-        'localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
-        localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
-      );
       const oldHistory = JSON.parse(
         localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
       );
-      console.log('oldHistory: ', oldHistory);
 
       newHistory = [data, ...oldHistory];
     } else {
       newHistory = [data];
-      console.log('newHistory: ', newHistory);
     }
 
     localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
     localStorage.setItem(
       WELCOME_LANDMARK_LS_HISTORY,
       JSON.stringify(newHistory)
-    );
-    console.log(
-      '2) localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
-      localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
     );
     setHistoryJSON(JSON.stringify(newHistory));
   };
@@ -138,7 +133,6 @@ const Map = ({ lat, long, place }) => {
   const hideHistory = () => {
     setisOpenModal(false);
   };
-  // TODO: clean history
 
   return (
     <>
@@ -165,56 +159,60 @@ const Map = ({ lat, long, place }) => {
         </ButtonGroup>
         <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />
       </div>
-      <MapGL
-        {...viewport}
-        onViewportChange={setViewport}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
-        attributionControl
-      >
-        <div className={styles.fullscreenControl}>
-          <FullscreenControl container={document.querySelector('body')} />
-        </div>
-        <MarkerAndPopup
-          lat={lat}
-          long={long}
-          id={0}
-          info={place}
-          isCurrent
-          color={theme.palette.primary.main}
-          handleSave={handleSave}
-        />
-        {otherUsers.map((userData, i) => {
-          const { id, latitude, longitude, info } = userData;
-          return (
-            <MarkerAndPopup
-              key={id}
-              lat={latitude}
-              long={longitude}
-              id={id}
-              info={info}
-              isCurrent={false}
-              isShowOthers={isShowOthers}
-              color={colors[i]}
-              handleSave={handleSave}
+      <div id="map-container" className={styles.mapContainer}>
+        <MapGL
+          {...viewport}
+          onViewportChange={setViewport}
+          mapboxApiAccessToken={MAPBOX_TOKEN}
+          mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
+          attributionControl
+        >
+          <div className={styles.fullscreenControl}>
+            <FullscreenControl
+              container={document.getElementById('map-container')}
             />
-          );
-        })}
+          </div>
+          <MarkerAndPopup
+            lat={lat}
+            long={long}
+            id={0}
+            info={place}
+            isCurrent
+            color={theme.palette.primary.main}
+            handleSave={handleSave}
+          />
+          {otherUsers.map((userData, i) => {
+            const { id, latitude, longitude, info } = userData;
+            return (
+              <MarkerAndPopup
+                key={id}
+                lat={latitude}
+                long={longitude}
+                id={id}
+                info={info}
+                isCurrent={false}
+                isShowOthers={isShowOthers}
+                color={colors[i]}
+                handleSave={handleSave}
+              />
+            );
+          })}
 
-        <GeolocateControl
-          style={geolocateStyle}
-          positionOptions={{ enableHighAccuracy: true }}
-          trackUserLocation
-        />
-        <div className={styles.scaler}>
-          <ScaleControl maxWidth={100} unit="metric" />
-        </div>
-        <HistoryModal
-          isOpen={isOpenModal}
-          hideHistory={hideHistory}
-          history={historyJSON}
-        />
-      </MapGL>
+          <GeolocateControl
+            style={geolocateStyle}
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation
+          />
+          <div className={styles.scaler}>
+            <ScaleControl maxWidth={100} unit="metric" />
+          </div>
+          <HistoryModal
+            isOpen={isOpenModal}
+            hideHistory={hideHistory}
+            history={historyJSON}
+          />
+        </MapGL>
+      </div>
     </>
   );
 };
