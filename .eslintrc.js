@@ -44,6 +44,7 @@ module.exports = {
     'react/jsx-wrap-multilines': [0],
     'react/jsx-props-no-spreading': [0],
     'no-console': 'off',
+    'react/display-name': [0],
   },
   overrides: [
     {

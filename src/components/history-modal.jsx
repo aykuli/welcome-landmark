@@ -30,7 +30,7 @@ const HistoryModal = ({ isOpen, hideHistory }) => {
       <Modal
         aria-labelledby="History of coordinates"
         aria-describedby="where user have been"
-        open={isOpen}
+        open
         onClose={hideHistory}
         closeAfterTransition
         BackdropComponent={Backdrop}
