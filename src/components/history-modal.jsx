@@ -19,12 +19,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const HistoryModal = ({ isOpen, hideHistory }) => {
+const HistoryModal = ({ isOpen, hideHistory, setHistory }) => {
   const classes = useStyles();
-  const [history, setHistory] = useState(
-    JSON.parse(localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)) || ''
-  );
-  console.log(history);
+  const history =
+    JSON.parse(localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)) || '';
   return (
     <>
       <Modal
@@ -40,7 +38,7 @@ const HistoryModal = ({ isOpen, hideHistory }) => {
         className={classes.modal}
       >
         <Fade in={isOpen}>
-          <HistoryTable data={history} />
+          <HistoryTable data={history} setHistory={setHistory} />
         </Fade>
       </Modal>
     </>
@@ -52,9 +50,11 @@ export default HistoryModal;
 HistoryModal.defaultProps = {
   isOpen: false,
   hideHistory: () => {},
+  setHistory: () => {},
 };
 
 HistoryModal.propTypes = {
   isOpen: PropTypes.bool,
   hideHistory: PropTypes.func,
+  setHistory: PropTypes.func,
 };

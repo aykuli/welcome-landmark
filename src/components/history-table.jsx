@@ -1,6 +1,5 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
 import {
   Search,
   AddBox,
@@ -19,6 +18,8 @@ import {
   ViewColumn,
 } from '@material-ui/icons';
 import MaterialTable from 'material-table';
+
+import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -59,7 +60,7 @@ const HistoryTable = ({ data }) => {
         field: 'coordinates[1]',
       },
     ],
-    tableData: data,
+    data,
   });
 
   return (
@@ -67,44 +68,23 @@ const HistoryTable = ({ data }) => {
       <MaterialTable
         title="Travel History"
         columns={state.columns}
-        data={state.tableData}
+        data={state.data}
         icons={tableIcons}
         editable={{
-          //   onRowAdd: newData =>
-          //     new Promise(resolve => {
-          //       setTimeout(() => {
-          //         resolve();
-          //         setState(prevState => {
-          //           const data = [...prevState.data];
-          //           data.push(newData);
-          //           return { ...prevState, data };
-          //         });
-          //       }, 600);
-          //     }),
-          //   onRowUpdate: (newData, oldData) =>
-          //     new Promise(resolve => {
-          //       setTimeout(() => {
-          //         resolve();
-          //         if (oldData) {
-          //           setState(prevState => {
-          //               console.log(prevState);
-          //             const data = [...prevState.data];
-          //             data[data.indexOf(oldData)] = newData;
-          //             return { ...prevState, data };
-          //           });
-          //         }
-          //       }, 600);
-          // }),
           onRowDelete: oldData =>
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
                 setState(prevState => {
-                  console.log('prevState: ', prevState);
-                  const history = [...prevState.tableData];
-                  history.splice(history.indexOf(oldData), 1);
+                  const prevStateData = [...prevState.data];
+                  prevStateData.splice(prevStateData.indexOf(oldData), 1);
 
-                  return { ...prevState, history };
+                  localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+                  localStorage.setItem(
+                    WELCOME_LANDMARK_LS_HISTORY,
+                    JSON.stringify(prevStateData)
+                  );
+                  return { ...prevState, data: prevStateData };
                 });
               }, 600);
             }),

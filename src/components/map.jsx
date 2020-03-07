@@ -52,7 +52,7 @@ const Map = ({ lat, long, place }) => {
   const [mapTheme, setMapTheme] = useState('streets-v11');
   const [isOpenModal, setisOpenModal] = React.useState(false);
   const [history, setHistory] = React.useState(
-    localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY) || ''
+    JSON.parse(localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)) || []
   );
 
   const handleTheme = e => {
@@ -84,10 +84,6 @@ const Map = ({ lat, long, place }) => {
   };
 
   const otherUsers = otherUsersCoors(lat, long);
-
-  // useEffect(() => {
-  //   localStorage.setItem(WELCOME_LANDMARK_LS_HISTORY, '');
-  // }, []);
 
   const handleSave = () => {
     const data = {
@@ -182,7 +178,11 @@ const Map = ({ lat, long, place }) => {
         <div className={styles.scaler}>
           <ScaleControl maxWidth={100} unit="metric" />
         </div>
-        <HistoryModal isOpen={isOpenModal} hideHistory={hideHistory} />
+        <HistoryModal
+          isOpen={isOpenModal}
+          hideHistory={hideHistory}
+          setHistory={setHistory}
+        />
       </MapGL>
     </>
   );
