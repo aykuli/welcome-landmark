@@ -35,6 +35,10 @@ const useStyles = makeStyles({
     right: 0,
   },
   scaler: { position: 'absolute', bottom: 20, right: 35 },
+  modalWrap: {
+    width: '100vw',
+    backgroundColor: 'blue',
+  },
 });
 
 const Map = ({ lat, long, place }) => {
@@ -89,7 +93,7 @@ const Map = ({ lat, long, place }) => {
   const otherUsers = otherUsersCoors(lat, long);
 
   const handleSave = () => {
-    console.log('save')
+    console.log('save');
     console.log(
       '1) localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
       localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
@@ -110,7 +114,7 @@ const Map = ({ lat, long, place }) => {
       );
       console.log('oldHistory: ', oldHistory);
 
-      newHistory = [data, ...oldHistory];  
+      newHistory = [data, ...oldHistory];
     } else {
       newHistory = [data];
       console.log('newHistory: ', newHistory);
@@ -149,11 +153,14 @@ const Map = ({ lat, long, place }) => {
           <Button onClick={showHistory} aria-label="Show history">
             Show history
           </Button>
-          <Button onClick={() => {
+          <Button
+            onClick={() => {
               localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
               setHistoryJSON(null);
-            }} aria-label="Back to current place">
-            Clean  history
+            }}
+            aria-label="Back to current place"
+          >
+            Clean history
           </Button>
         </ButtonGroup>
         <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />

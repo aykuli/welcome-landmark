@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useRef, useEffect } from 'react';
+import React, { useState, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Search,
@@ -17,6 +17,7 @@ import {
   SaveAlt,
   ViewColumn,
 } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 
 import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
@@ -45,9 +46,20 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100vw',
+    },
+  },
+}));
+
 const HistoryTable = ({ history }) => {
+  const styles = useStyles();
+
   const data = history === null ? [] : JSON.parse(history);
-  console.log('data: ', data)
+
   const [state, setState] = useState({
     columns: [
       { title: 'Date', field: 'date', type: 'date' },
@@ -65,12 +77,16 @@ const HistoryTable = ({ history }) => {
     data,
   });
   return (
-    <div style={{ width: '100%' }}>
+    <div className={styles.container}>
       <MaterialTable
         title="Travel History"
         columns={state.columns}
         data={state.data}
         icons={tableIcons}
+        options={{
+          exportButton: true,
+          pageSizeOptions: [5],
+        }}
         editable={{
           onRowDelete: oldData =>
             new Promise(resolve => {
