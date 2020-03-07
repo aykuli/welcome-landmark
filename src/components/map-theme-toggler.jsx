@@ -23,7 +23,6 @@ const useStyles = makeStyles(themeThere =>
   })
 );
 
-// TODO переделать button на select и сделать выбр карт побольше  streets light dark outdoors satellite
 const MapThemeToggler = ({ mapTheme, handleTheme }) => {
   const classes = useStyles(theme);
   return (

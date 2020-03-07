@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, CssBaseline } from '@material-ui/core';
 
 import theme from '../static/themes/theme';
 
@@ -11,7 +11,12 @@ import ErrorBoundry from './error-boundary';
 
 const useStyles = makeStyles({
   mapContainer: {
-    margin: '40px 0',
+    position: 'relative',
+  },
+  coordinates: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
   },
 });
 
@@ -20,6 +25,8 @@ const App = () => {
   const [isDataReady, setIsDataReady] = useState(false);
   const [coors, setCoors] = useState(null);
   const [place, setPlace] = useState({ city: '', country: '' });
+  // there we using ipinfo API
+  // another method is using navigator.geolocation.getCurrentPosition(success, error, options) from https://developer.mozilla.org/ru/docs/Web/API/Geolocation/getCurrentPosition
   const { data, isLoading, isError } = useDataApi(
     `https://ipinfo.io?token=${IPINFO_TOKEN}`,
     null
@@ -37,26 +44,22 @@ const App = () => {
   return (
     <ErrorBoundry>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         {isError && <div>Something went wrong...</div>}
         {isLoading ? <div>Loading current coordinates...</div> : null}
         {isDataReady ? (
           <>
-            <div>
-              <div>
-                <Typography variant="h2">
-                  {place.city},{place.country}
-                </Typography>
-                <Typography variant="body2">
-                  lat ={coors[0]}, long ={coors[1]}
-                </Typography>
-              </div>
-            </div>
             <div className={styles.mapContainer}>
               <Map
                 lat={Number(coors[0])}
                 long={Number(coors[1])}
                 place={place}
               />
+              <div className={styles.coordinates}>
+                <Typography variant="caption">
+                  {coors[0]}, {coors[1]}
+                </Typography>
+              </div>
             </div>
           </>
         ) : null}
