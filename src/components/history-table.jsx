@@ -46,7 +46,8 @@ const tableIcons = {
 };
 
 const HistoryTable = ({ history }) => {
-  const data = history === null ? [] : JSON.stringify(history);
+  const data = history === null ? [] : JSON.parse(history);
+  console.log('data: ', data)
   const [state, setState] = useState({
     columns: [
       { title: 'Date', field: 'date', type: 'date' },
@@ -101,12 +102,5 @@ HistoryTable.defaultProps = {
 };
 
 HistoryTable.propTypes = {
-  history: PropTypes.shape({
-    date: PropTypes.instanceOf(Date),
-    address: PropTypes.shape({
-      city: PropTypes.string,
-      country: PropTypes.string,
-    }),
-    coordinates: PropTypes.arrayOf(PropTypes.number),
-  }),
+  history: PropTypes.string,
 };

@@ -53,12 +53,5 @@ HistoryModal.defaultProps = {
 HistoryModal.propTypes = {
   isOpen: PropTypes.bool,
   hideHistory: PropTypes.func,
-  history: PropTypes.shape({
-    date: PropTypes.instanceOf(Date),
-    address: PropTypes.shape({
-      city: PropTypes.string,
-      country: PropTypes.string,
-    }),
-    coordinates: PropTypes.arrayOf(PropTypes.number),
-  }),
+  history: PropTypes.string,
 };

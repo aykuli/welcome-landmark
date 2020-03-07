@@ -52,7 +52,7 @@ const Map = ({ lat, long, place }) => {
   const [mapTheme, setMapTheme] = useState('streets-v11');
   const [isOpenModal, setisOpenModal] = React.useState(false);
   // TODO remove localStorage cleaning
-  localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+  // localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
 
   const [historyJSON, setHistoryJSON] = React.useState(
     localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
@@ -110,7 +110,7 @@ const Map = ({ lat, long, place }) => {
       );
       console.log('oldHistory: ', oldHistory);
 
-      newHistory = [data, ...oldHistory];
+      newHistory = [data, ...oldHistory];  
     } else {
       newHistory = [data];
       console.log('newHistory: ', newHistory);
@@ -148,6 +148,12 @@ const Map = ({ lat, long, place }) => {
           </Button>
           <Button onClick={showHistory} aria-label="Show history">
             Show history
+          </Button>
+          <Button onClick={() => {
+              localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+              setHistoryJSON(null);
+            }} aria-label="Back to current place">
+            Clean  history
           </Button>
         </ButtonGroup>
         <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />
