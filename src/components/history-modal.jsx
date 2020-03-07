@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Backdrop, Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import HistoryTable from './history-table';
-import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -19,16 +18,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const HistoryModal = ({ isOpen, hideHistory, setHistory }) => {
+const HistoryModal = ({ isOpen, hideHistory, history }) => {
   const classes = useStyles();
-  const history =
-    JSON.parse(localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)) || '';
+
   return (
     <>
       <Modal
         aria-labelledby="History of coordinates"
         aria-describedby="where user have been"
-        open
+        open={isOpen}
         onClose={hideHistory}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -37,24 +35,30 @@ const HistoryModal = ({ isOpen, hideHistory, setHistory }) => {
         }}
         className={classes.modal}
       >
-        <Fade in={isOpen}>
-          <HistoryTable data={history} setHistory={setHistory} />
-        </Fade>
+        <div>
+          <HistoryTable history={history} />
+        </div>
       </Modal>
     </>
   );
 };
-
 export default HistoryModal;
 
 HistoryModal.defaultProps = {
   isOpen: false,
   hideHistory: () => {},
-  setHistory: () => {},
+  history: null,
 };
 
 HistoryModal.propTypes = {
   isOpen: PropTypes.bool,
   hideHistory: PropTypes.func,
-  setHistory: PropTypes.func,
+  history: PropTypes.shape({
+    date: PropTypes.instanceOf(Date),
+    address: PropTypes.shape({
+      city: PropTypes.string,
+      country: PropTypes.string,
+    }),
+    coordinates: PropTypes.arrayOf(PropTypes.number),
+  }),
 };

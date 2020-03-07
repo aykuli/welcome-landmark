@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useEffect } from 'react';
+import React, { useState, forwardRef, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Search,
@@ -45,7 +45,8 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
-const HistoryTable = ({ data }) => {
+const HistoryTable = ({ history }) => {
+  const data = history === null ? [] : JSON.stringify(history);
   const [state, setState] = useState({
     columns: [
       { title: 'Date', field: 'date', type: 'date' },
@@ -62,7 +63,6 @@ const HistoryTable = ({ data }) => {
     ],
     data,
   });
-
   return (
     <div style={{ width: '100%' }}>
       <MaterialTable
@@ -96,12 +96,17 @@ const HistoryTable = ({ data }) => {
 
 export default HistoryTable;
 
-// HistoryTable.defaultProps = {
-//   data: false,
-//   hideHistory: () => {},
-// };
+HistoryTable.defaultProps = {
+  history: null,
+};
 
-// HistoryTable.propTypes = {
-//   isOpen: PropTypes.bool,
-//   hideHistory: PropTypes.func,
-// };
+HistoryTable.propTypes = {
+  history: PropTypes.shape({
+    date: PropTypes.instanceOf(Date),
+    address: PropTypes.shape({
+      city: PropTypes.string,
+      country: PropTypes.string,
+    }),
+    coordinates: PropTypes.arrayOf(PropTypes.number),
+  }),
+};

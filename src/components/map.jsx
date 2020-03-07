@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MapGL, {
   FlyToInterpolator,
@@ -51,8 +51,11 @@ const Map = ({ lat, long, place }) => {
   const [isShowOthers, setIsShowOthers] = useState(true);
   const [mapTheme, setMapTheme] = useState('streets-v11');
   const [isOpenModal, setisOpenModal] = React.useState(false);
-  const [history, setHistory] = React.useState(
-    JSON.parse(localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)) || []
+  // TODO remove localStorage cleaning
+  localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+
+  const [historyJSON, setHistoryJSON] = React.useState(
+    localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
   );
 
   const handleTheme = e => {
@@ -86,20 +89,31 @@ const Map = ({ lat, long, place }) => {
   const otherUsers = otherUsersCoors(lat, long);
 
   const handleSave = () => {
+    console.log('save')
+    console.log(
+      '1) localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
+      localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
+    );
     const data = {
       date: new Date(),
       address: place,
       coordinates: [lat, long],
     };
     let newHistory = [];
-    if (history !== '') {
+    if (historyJSON !== null) {
+      console.log(
+        'localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
+        localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
+      );
       const oldHistory = JSON.parse(
         localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
       );
+      console.log('oldHistory: ', oldHistory);
 
-      newHistory = [data, ...oldHistory, ...newHistory];
+      newHistory = [data, ...oldHistory];
     } else {
-      newHistory = [data, ...newHistory];
+      newHistory = [data];
+      console.log('newHistory: ', newHistory);
     }
 
     localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
@@ -107,7 +121,11 @@ const Map = ({ lat, long, place }) => {
       WELCOME_LANDMARK_LS_HISTORY,
       JSON.stringify(newHistory)
     );
-    setHistory(newHistory);
+    console.log(
+      '2) localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
+      localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
+    );
+    setHistoryJSON(JSON.stringify(newHistory));
   };
 
   const showHistory = () => {
@@ -181,7 +199,7 @@ const Map = ({ lat, long, place }) => {
         <HistoryModal
           isOpen={isOpenModal}
           hideHistory={hideHistory}
-          setHistory={setHistory}
+          history={historyJSON}
         />
       </MapGL>
     </>
