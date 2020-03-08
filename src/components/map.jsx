@@ -25,29 +25,38 @@ const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
 
 const useStyles = makeStyles(themeHere => ({
   mapContainer: {
+    position: 'relative',
     width: '100%',
   },
   mapControllers: {
     position: 'absolute',
     top: 0,
     left: 0,
+    width: '100%',
+    zIndex: 2,
+    boxShadow: themeHere.shadows[2],
+  },
+  btnGroupAndTheme: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     flexWrap: 'wrap',
-    width: '100%',
     backgroundColor: themeHere.palette.background.default,
-    zIndex: 2,
-    boxShadow: themeHere.shadows[2],
   },
   fullscreenControl: {
     position: 'absolute',
-    right: 0,
+    bottom: 40,
+    right: 10,
   },
-  scaler: { position: 'absolute', bottom: 20, right: 35 },
+  scaler: { position: 'absolute', bottom: 16, right: 35 },
   modalWrap: {
     width: '100vw',
     backgroundColor: 'blue',
+  },
+  geolocateStyle: {
+    position: 'absolute',
+    bottom: 80,
+    right: 10,
   },
 }));
 
@@ -65,6 +74,7 @@ const Map = ({ lat, long, place }) => {
   const [isShowOthers, setIsShowOthers] = useState(true);
   const [mapTheme, setMapTheme] = useState('streets-v11');
   const [isOpenModal, setisOpenModal] = React.useState(false);
+  const [idShowPopup, setIdShowPopup] = React.useState(0);
 
   const [historyJSON, setHistoryJSON] = React.useState(
     localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
@@ -85,13 +95,6 @@ const Map = ({ lat, long, place }) => {
       transitionEasing: easeCubic,
     };
     setViewport(viewportCurrent);
-  };
-
-  const geolocateStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    margin: 10,
   };
 
   const toggleOthers = () => {
@@ -139,25 +142,16 @@ const Map = ({ lat, long, place }) => {
     setHistoryJSON(null);
   };
 
+  const hideAllMarkerPopups = setShowPopup => {
+    setShowPopup(false);
+  };
+
+  const handleShowPopup = (e, id) => {
+    setIdShowPopup(id);
+  };
+
   return (
     <>
-      <div className={styles.mapControllers}>
-        <ButtonGroup color="primary" aria-label="button group" size="small">
-          <Button onClick={gotoCurrentPlace} aria-label="Back to current place">
-            Back to current place
-          </Button>
-          <Button onClick={toggleOthers} aria-label="Hide or show other user's">
-            {isShowOthers ? 'Hide ' : 'Show '}other user&apos;s
-          </Button>
-          <Button onClick={showHistory} aria-label="Show history">
-            Show history
-          </Button>
-          <Button onClick={cleanHistory} aria-label="Clean history">
-            Clean history
-          </Button>
-        </ButtonGroup>
-        <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />
-      </div>
       <div id="map-container" className={styles.mapContainer}>
         <MapGL
           {...viewport}
@@ -168,11 +162,6 @@ const Map = ({ lat, long, place }) => {
           width="100%"
           height="100vh"
         >
-          <div className={styles.fullscreenControl}>
-            <FullscreenControl
-              container={document.getElementById('map-container')}
-            />
-          </div>
           <MarkerAndPopup
             lat={lat}
             long={long}
@@ -181,6 +170,8 @@ const Map = ({ lat, long, place }) => {
             isCurrent
             color={theme.palette.primary.main}
             handleSave={e => handleSave(e, place)}
+            idShowPopup={idShowPopup}
+            handleShowPopup={handleShowPopup}
           />
           {otherUsers.map((userData, i) => {
             const { id, latitude, longitude, info } = userData;
@@ -195,14 +186,12 @@ const Map = ({ lat, long, place }) => {
                 isShowOthers={isShowOthers}
                 color={colors[i]}
                 handleSave={e => handleSave(e, info)}
+                hideAllMarkerPopups={hideAllMarkerPopups}
+                idShowPopup={idShowPopup}
+                handleShowPopup={handleShowPopup}
               />
             );
           })}
-          <GeolocateControl
-            style={geolocateStyle}
-            positionOptions={{ enableHighAccuracy: true }}
-            trackUserLocation
-          />
           <div className={styles.scaler}>
             <ScaleControl maxWidth={100} unit="metric" />
           </div>
@@ -211,7 +200,42 @@ const Map = ({ lat, long, place }) => {
             hideHistory={hideHistory}
             history={historyJSON}
           />
+          <GeolocateControl
+            className={styles.geolocateStyle}
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation
+          />
+          <div className={styles.fullscreenControl}>
+            <FullscreenControl
+              container={document.getElementById('map-container')}
+            />
+          </div>
         </MapGL>
+      </div>
+      <div className={styles.mapControllers}>
+        <div className={styles.btnGroupAndTheme}>
+          <ButtonGroup color="primary" aria-label="button group" size="small">
+            <Button
+              onClick={gotoCurrentPlace}
+              aria-label="Back to current place"
+            >
+              Back to current place
+            </Button>
+            <Button
+              onClick={toggleOthers}
+              aria-label="Hide or show other user's"
+            >
+              {isShowOthers ? 'Hide ' : 'Show '}other user&apos;s
+            </Button>
+            <Button onClick={showHistory} aria-label="Show history">
+              Show history
+            </Button>
+            <Button onClick={cleanHistory} aria-label="Clean history">
+              Clean history
+            </Button>
+          </ButtonGroup>
+          <MapThemeToggler mapTheme={mapTheme} handleTheme={handleTheme} />
+        </div>
       </div>
     </>
   );

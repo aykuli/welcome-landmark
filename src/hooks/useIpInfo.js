@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 const useDataApi = (initUrl, initData) => {
   const [data, setData] = useState(initData);
-  const [url, setUrl] = useState(initUrl);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -11,7 +10,7 @@ const useDataApi = (initUrl, initData) => {
       setIsError(false);
       setIsLoading(true);
       try {
-        const response = await fetch(url);
+        const response = await fetch(initUrl);
         const json = await response.json();
         setData(json);
       } catch (e) {
@@ -20,7 +19,7 @@ const useDataApi = (initUrl, initData) => {
       setIsLoading(false);
     };
     fetchData();
-  }, [url]);
+  }, [initUrl]);
   return { data, isLoading, isError };
 };
 export default useDataApi;
