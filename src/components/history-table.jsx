@@ -57,7 +57,6 @@ const useStyles = makeStyles(theme => ({
 
 const HistoryTable = ({ history }) => {
   const styles = useStyles();
-
   const data = history === null ? [] : JSON.parse(history);
 
   const [state, setState] = useState({
@@ -76,6 +75,7 @@ const HistoryTable = ({ history }) => {
     ],
     data,
   });
+
   return (
     <div className={styles.container}>
       <MaterialTable

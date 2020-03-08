@@ -23,31 +23,36 @@ import { WELCOME_LANDMARK_LS_HISTORY } from '../static/consts';
 
 const colors = colorGenerator(otherUsersCoors(), theme.palette.info.main);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(themeHere => ({
   mapContainer: {
     width: '100%',
   },
   mapControllers: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     flexWrap: 'wrap',
+    width: '100%',
+    backgroundColor: themeHere.palette.background.default,
+    zIndex: 2,
+    boxShadow: themeHere.shadows[2],
   },
   fullscreenControl: {
     position: 'absolute',
     right: 0,
-    // width: '100vw',
-    // height: '100vh',
   },
   scaler: { position: 'absolute', bottom: 20, right: 35 },
   modalWrap: {
     width: '100vw',
     backgroundColor: 'blue',
   },
-});
+}));
 
 const Map = ({ lat, long, place }) => {
-  const styles = useStyles();
+  const styles = useStyles(theme);
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '100vh',
@@ -60,8 +65,6 @@ const Map = ({ lat, long, place }) => {
   const [isShowOthers, setIsShowOthers] = useState(true);
   const [mapTheme, setMapTheme] = useState('streets-v11');
   const [isOpenModal, setisOpenModal] = React.useState(false);
-  // TODO remove localStorage cleaning
-  // localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
 
   const [historyJSON, setHistoryJSON] = React.useState(
     localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
@@ -97,15 +100,10 @@ const Map = ({ lat, long, place }) => {
 
   const otherUsers = otherUsersCoors(lat, long);
 
-  const handleSave = () => {
-    console.log('save');
-    console.log(
-      '1) localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY): ',
-      localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
-    );
+  const handleSave = (e, info) => {
     const data = {
       date: new Date(),
-      address: place,
+      address: info,
       coordinates: [lat, long],
     };
     let newHistory = [];
@@ -128,10 +126,17 @@ const Map = ({ lat, long, place }) => {
   };
 
   const showHistory = () => {
+    const newHistory = localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY);
+    localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+    setHistoryJSON(newHistory);
     setisOpenModal(true);
   };
   const hideHistory = () => {
     setisOpenModal(false);
+  };
+  const cleanHistory = () => {
+    localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+    setHistoryJSON(null);
   };
 
   return (
@@ -147,13 +152,7 @@ const Map = ({ lat, long, place }) => {
           <Button onClick={showHistory} aria-label="Show history">
             Show history
           </Button>
-          <Button
-            onClick={() => {
-              localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
-              setHistoryJSON(null);
-            }}
-            aria-label="Back to current place"
-          >
+          <Button onClick={cleanHistory} aria-label="Clean history">
             Clean history
           </Button>
         </ButtonGroup>
@@ -166,6 +165,8 @@ const Map = ({ lat, long, place }) => {
           mapboxApiAccessToken={MAPBOX_TOKEN}
           mapStyle={`mapbox://styles/mapbox/${mapTheme}`}
           attributionControl
+          width="100%"
+          height="100vh"
         >
           <div className={styles.fullscreenControl}>
             <FullscreenControl
@@ -179,7 +180,7 @@ const Map = ({ lat, long, place }) => {
             info={place}
             isCurrent
             color={theme.palette.primary.main}
-            handleSave={handleSave}
+            handleSave={e => handleSave(e, place)}
           />
           {otherUsers.map((userData, i) => {
             const { id, latitude, longitude, info } = userData;
@@ -193,11 +194,10 @@ const Map = ({ lat, long, place }) => {
                 isCurrent={false}
                 isShowOthers={isShowOthers}
                 color={colors[i]}
-                handleSave={handleSave}
+                handleSave={e => handleSave(e, info)}
               />
             );
           })}
-
           <GeolocateControl
             style={geolocateStyle}
             positionOptions={{ enableHighAccuracy: true }}
