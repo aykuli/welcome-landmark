@@ -13,6 +13,7 @@ const useStyles = makeStyles(themeThere =>
       '& div': {
         color: themeThere.palette.text.secondary,
       },
+      textAlign: 'right',
     },
     selectEmpty: {
       marginTop: themeThere.spacing(2),
@@ -23,7 +24,6 @@ const useStyles = makeStyles(themeThere =>
   })
 );
 
-// TODO переделать button на select и сделать выбр карт побольше  streets light dark outdoors satellite
 const MapThemeToggler = ({ mapTheme, handleTheme }) => {
   const classes = useStyles(theme);
   return (

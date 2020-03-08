@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import ErrorIndicator from './error-indicator';
 
-// There i have to use class component because of componentDidCatch that did'nt still realized in functional React
+// There i should to use class component because of componentDidCatch that did'n still realized in functional React
 class ErrorBoundry extends Component {
   constructor(props) {
     super(props);

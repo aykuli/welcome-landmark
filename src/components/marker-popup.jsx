@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Divider } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 
 import theme from '../static/themes/theme';
@@ -15,6 +16,9 @@ const MarkerAndPopup = ({
   isCurrent,
   isShowOthers,
   color,
+  handleSave,
+  idShowPopup,
+  handleShowPopup,
 }) => {
   const [isShowPopup, setIsShowPopup] = useState(false);
 
@@ -23,6 +27,12 @@ const MarkerAndPopup = ({
       setIsShowPopup(true);
     }
   }, [isCurrent]);
+
+  useEffect(() => {
+    if (idShowPopup === id) {
+      setIsShowPopup(true);
+    } else setIsShowPopup(false);
+  }, [idShowPopup, id]);
 
   const useStyles = makeStyles({
     marker: {
@@ -66,25 +76,29 @@ const MarkerAndPopup = ({
 
   return isCurrent || isShowOthers ? (
     <>
-      <Marker
-        key={id}
-        longitude={long}
-        latitude={lat}
-        offsetLeft={-13}
-        offsetTop={5}
+      <div
+        className={
+          isCurrent ? styles.currentUserMarker : styles.otherUserMarker
+        }
+        onClick={e => {
+          handleShowPopup(e, id);
+        }}
+        onKeyDown={e => {
+          handleShowPopup(e, id);
+        }}
+        role="button"
+        tabIndex={0}
       >
-        <div
-          className={
-            isCurrent ? styles.currentUserMarker : styles.otherUserMarker
-          }
-          onClick={() => setIsShowPopup(!isShowPopup)}
-          onKeyDown={() => setIsShowPopup(true)}
-          role="button"
-          tabIndex={0}
+        <Marker
+          key={id}
+          longitude={long}
+          latitude={lat}
+          offsetLeft={-13}
+          offsetTop={5}
         >
           <RoomIcon />
-        </div>
-      </Marker>
+        </Marker>
+      </div>
       {isShowPopup && (
         <Popup
           offsetLeft={0}
@@ -95,12 +109,21 @@ const MarkerAndPopup = ({
           closeOnClick={false}
           closeButton
           anchor="left"
-          dynamicPosition
           className={styles.popup}
         >
           <div>
+            <SaveIcon
+              onClick={handleSave}
+              onKeyDown={handleSave}
+              tabIndex={0}
+              color="primary"
+              fontSize="small"
+              style={{ cursor: 'pointer' }}
+            />
+            <Divider />
             <Typography variant="h5">{id}</Typography>
-            <Typography variant="body1">{info}</Typography>
+            <Typography variant="body1">city: {info.city}</Typography>
+            <Typography variant="body1">country: {info.country}</Typography>
           </div>
         </Popup>
       )}
@@ -114,18 +137,27 @@ MarkerAndPopup.defaultProps = {
   lat: 0,
   long: 0,
   id: 0,
-  info: '',
+  info: { coutry: '', city: '' },
   isCurrent: false,
   isShowOthers: true,
   color: theme.palette.primary.main,
+  handleSave: () => {},
+  idShowPopup: 0,
+  handleShowPopup: () => {},
 };
 
 MarkerAndPopup.propTypes = {
   lat: PropTypes.number,
   long: PropTypes.number,
   id: PropTypes.number,
-  info: PropTypes.string,
+  info: PropTypes.shape({
+    city: PropTypes.string,
+    country: PropTypes.string,
+  }),
   isCurrent: PropTypes.bool,
   isShowOthers: PropTypes.bool,
   color: PropTypes.string,
+  handleSave: PropTypes.func,
+  idShowPopup: PropTypes.number,
+  handleShowPopup: PropTypes.func,
 };
