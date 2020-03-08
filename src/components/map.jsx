@@ -126,6 +126,9 @@ const Map = ({ lat, long, place }) => {
   };
 
   const showHistory = () => {
+    const newHistory = localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY);
+    localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+    setHistoryJSON(newHistory);
     setisOpenModal(true);
   };
   const hideHistory = () => {
