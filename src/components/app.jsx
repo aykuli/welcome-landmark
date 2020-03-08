@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { Typography, CssBaseline } from '@material-ui/core';
 
