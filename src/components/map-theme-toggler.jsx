@@ -13,6 +13,7 @@ const useStyles = makeStyles(themeThere =>
       '& div': {
         color: themeThere.palette.text.secondary,
       },
+      textAlign: 'right',
     },
     selectEmpty: {
       marginTop: themeThere.spacing(2),
