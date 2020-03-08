@@ -76,10 +76,6 @@ const Map = ({ lat, long, place }) => {
   const [isOpenModal, setisOpenModal] = React.useState(false);
   const [idShowPopup, setIdShowPopup] = React.useState(0);
 
-  const [historyJSON, setHistoryJSON] = React.useState(
-    localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
-  );
-
   const handleTheme = e => {
     setMapTheme(e.target.value);
   };
@@ -110,28 +106,23 @@ const Map = ({ lat, long, place }) => {
       coordinates: [lat, long],
     };
     let newHistory = [];
-    if (historyJSON !== null) {
-      const oldHistory = JSON.parse(
-        localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
-      );
+    const oldHistory = JSON.parse(
+      localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY)
+    );
 
+    if (oldHistory !== null) {
       newHistory = [data, ...oldHistory];
     } else {
       newHistory = [data];
     }
-
     localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
     localStorage.setItem(
       WELCOME_LANDMARK_LS_HISTORY,
       JSON.stringify(newHistory)
     );
-    setHistoryJSON(JSON.stringify(newHistory));
   };
 
   const showHistory = () => {
-    const newHistory = localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY);
-    localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
-    setHistoryJSON(newHistory);
     setisOpenModal(true);
   };
   const hideHistory = () => {
@@ -139,7 +130,6 @@ const Map = ({ lat, long, place }) => {
   };
   const cleanHistory = () => {
     localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
-    setHistoryJSON(null);
   };
 
   const hideAllMarkerPopups = setShowPopup => {
@@ -195,11 +185,7 @@ const Map = ({ lat, long, place }) => {
           <div className={styles.scaler}>
             <ScaleControl maxWidth={100} unit="metric" />
           </div>
-          <HistoryModal
-            isOpen={isOpenModal}
-            hideHistory={hideHistory}
-            history={historyJSON}
-          />
+          <HistoryModal isOpen={isOpenModal} hideHistory={hideHistory} />
           <GeolocateControl
             className={styles.geolocateStyle}
             positionOptions={{ enableHighAccuracy: true }}
