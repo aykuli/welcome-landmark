@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const HistoryModal = ({ isOpen, hideHistory, history }) => {
+const HistoryModal = ({ isOpen, hideHistory }) => {
   const classes = useStyles();
 
   return (
@@ -35,7 +35,7 @@ const HistoryModal = ({ isOpen, hideHistory, history }) => {
       className={classes.modal}
     >
       <div>
-        <HistoryTable history={history} />
+        <HistoryTable />
       </div>
     </Modal>
   );
@@ -45,11 +45,9 @@ export default HistoryModal;
 HistoryModal.defaultProps = {
   isOpen: false,
   hideHistory: () => {},
-  history: null,
 };
 
 HistoryModal.propTypes = {
   isOpen: PropTypes.bool,
   hideHistory: PropTypes.func,
-  history: PropTypes.string,
 };

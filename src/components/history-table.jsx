@@ -1,5 +1,4 @@
 import React, { useState, forwardRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   Search,
   AddBox,
@@ -55,8 +54,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const HistoryTable = ({ history }) => {
+const HistoryTable = () => {
   const styles = useStyles();
+  const history = localStorage.getItem(WELCOME_LANDMARK_LS_HISTORY);
   const data = history === null ? [] : JSON.parse(history);
 
   const [state, setState] = useState({
@@ -112,11 +112,3 @@ const HistoryTable = ({ history }) => {
 };
 
 export default HistoryTable;
-
-HistoryTable.defaultProps = {
-  history: null,
-};
-
-HistoryTable.propTypes = {
-  history: PropTypes.string,
-};
