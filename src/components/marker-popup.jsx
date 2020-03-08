@@ -17,6 +17,8 @@ const MarkerAndPopup = ({
   isShowOthers,
   color,
   handleSave,
+  idShowPopup,
+  handleShowPopup,
 }) => {
   const [isShowPopup, setIsShowPopup] = useState(false);
 
@@ -25,6 +27,12 @@ const MarkerAndPopup = ({
       setIsShowPopup(true);
     }
   }, [isCurrent]);
+
+  useEffect(() => {
+    if (idShowPopup === id) {
+      setIsShowPopup(true);
+    } else setIsShowPopup(false);
+  }, [idShowPopup, id]);
 
   const useStyles = makeStyles({
     marker: {
@@ -68,25 +76,29 @@ const MarkerAndPopup = ({
 
   return isCurrent || isShowOthers ? (
     <>
-      <Marker
-        key={id}
-        longitude={long}
-        latitude={lat}
-        offsetLeft={-13}
-        offsetTop={5}
+      <div
+        className={
+          isCurrent ? styles.currentUserMarker : styles.otherUserMarker
+        }
+        onClick={e => {
+          handleShowPopup(e, id);
+        }}
+        onKeyDown={e => {
+          handleShowPopup(e, id);
+        }}
+        role="button"
+        tabIndex={0}
       >
-        <div
-          className={
-            isCurrent ? styles.currentUserMarker : styles.otherUserMarker
-          }
-          onClick={() => setIsShowPopup(!isShowPopup)}
-          onKeyDown={() => setIsShowPopup(true)}
-          role="button"
-          tabIndex={0}
+        <Marker
+          key={id}
+          longitude={long}
+          latitude={lat}
+          offsetLeft={-13}
+          offsetTop={5}
         >
           <RoomIcon />
-        </div>
-      </Marker>
+        </Marker>
+      </div>
       {isShowPopup && (
         <Popup
           offsetLeft={0}
@@ -130,6 +142,8 @@ MarkerAndPopup.defaultProps = {
   isShowOthers: true,
   color: theme.palette.primary.main,
   handleSave: () => {},
+  idShowPopup: 0,
+  handleShowPopup: () => {},
 };
 
 MarkerAndPopup.propTypes = {
@@ -144,4 +158,6 @@ MarkerAndPopup.propTypes = {
   isShowOthers: PropTypes.bool,
   color: PropTypes.string,
   handleSave: PropTypes.func,
+  idShowPopup: PropTypes.number,
+  handleShowPopup: PropTypes.func,
 };

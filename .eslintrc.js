@@ -43,7 +43,7 @@ module.exports = {
     'no-underscore-dangle': [0],
     'react/jsx-wrap-multilines': [0],
     'react/jsx-props-no-spreading': [0],
-    // 'no-console': 'off', // fro development mode
+    'no-console': 'off', // fro development mode
     'react/display-name': [0],
   },
   overrides: [
