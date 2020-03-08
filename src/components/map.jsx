@@ -100,10 +100,10 @@ const Map = ({ lat, long, place }) => {
 
   const otherUsers = otherUsersCoors(lat, long);
 
-  const handleSave = () => {
+  const handleSave = (e, info) => {
     const data = {
       date: new Date(),
-      address: place,
+      address: info,
       coordinates: [lat, long],
     };
     let newHistory = [];
@@ -131,6 +131,10 @@ const Map = ({ lat, long, place }) => {
   const hideHistory = () => {
     setisOpenModal(false);
   };
+  const cleanHistory = () => {
+    localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
+    setHistoryJSON(null);
+  };
 
   return (
     <>
@@ -145,13 +149,7 @@ const Map = ({ lat, long, place }) => {
           <Button onClick={showHistory} aria-label="Show history">
             Show history
           </Button>
-          <Button
-            onClick={() => {
-              localStorage.removeItem(WELCOME_LANDMARK_LS_HISTORY);
-              setHistoryJSON(null);
-            }}
-            aria-label="Back to current place"
-          >
+          <Button onClick={cleanHistory} aria-label="Clean history">
             Clean history
           </Button>
         </ButtonGroup>
@@ -179,7 +177,7 @@ const Map = ({ lat, long, place }) => {
             info={place}
             isCurrent
             color={theme.palette.primary.main}
-            handleSave={handleSave}
+            handleSave={e => handleSave(e, place)}
           />
           {otherUsers.map((userData, i) => {
             const { id, latitude, longitude, info } = userData;
@@ -193,11 +191,10 @@ const Map = ({ lat, long, place }) => {
                 isCurrent={false}
                 isShowOthers={isShowOthers}
                 color={colors[i]}
-                handleSave={handleSave}
+                handleSave={e => handleSave(e, info)}
               />
             );
           })}
-
           <GeolocateControl
             style={geolocateStyle}
             positionOptions={{ enableHighAccuracy: true }}

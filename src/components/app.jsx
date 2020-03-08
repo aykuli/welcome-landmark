@@ -8,6 +8,7 @@ import useDataApi from '../hooks/useIpInfo';
 import { IPINFO_TOKEN } from '../static/api-keys';
 import Map from './map';
 import ErrorBoundry from './error-boundary';
+import Preloader from './preloader';
 
 const useStyles = makeStyles({
   mapContainer: {
@@ -17,6 +18,10 @@ const useStyles = makeStyles({
     position: 'absolute',
     bottom: 20,
     left: 0,
+  },
+  loading: {
+    margin: '30px auto',
+    textAlign: 'center',
   },
 });
 
@@ -46,7 +51,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {isError && <div>Something went wrong...</div>}
-        {isLoading ? <div>Loading current coordinates...</div> : null}
+        {isLoading ? (
+          <Typography variant="h3" className={styles.loading}>
+            Loading current coordinates...
+          </Typography>
+        ) : null}
         {isDataReady ? (
           <>
             <div className={styles.mapContainer}>
@@ -62,7 +71,9 @@ const App = () => {
               </div>
             </div>
           </>
-        ) : null}
+        ) : (
+          <Preloader />
+        )}
       </ThemeProvider>
     </ErrorBoundry>
   );
